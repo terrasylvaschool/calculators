@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tincture Formulation Calculator · Terra Sylva School</title>
+  <style>
+    :root {
+      --ts-bg: #6b6257;
+      --ts-card-bg: #ffffff;
+      --ts-border: #e2d8c8;
+      --ts-text: #2b2b2b;
+      --ts-muted: #6b6257;
+      --ts-accent: #143d2f;    /* deep green */
+      --ts-accent-soft: #e6efe9;
+      --ts-button: #143d2f;
+      --ts-button-text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--ts-bg);
+      color: var(--ts-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    .page-wrapper {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .site-tag {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ts-muted);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .site-tag a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      padding-bottom: 1px;
+    }
+
+    .site-tag a:hover {
+      border-bottom-color: var(--ts-accent);
+    }
+
+    .card {
+      background: var(--ts-card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--ts-border);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      padding: 2rem 1.75rem 2.25rem;
+      max-width: 720px;
+      margin: 0 auto;   /* centers the card */
+    }
+
+    .ts-logo {
+      max-width: 275px;   /* adjust to taste */
+      height: auto;
+      display: block;
+      margin: 0.5rem auto 1rem; /* centers the logo */
+      opacity: 0.95;           /* optional: softens slightly */
+    }
+
+    @media (min-width: 700px) {
+      .card {
+        padding: 2.5rem 2.75rem 2.75rem;
+      }
+    }
+
+    /* ===== MOBILE OVERRIDES ===== */
+    @media (max-width: 700px) {
+      body {
+        background: #ffffff; /* no dark frame on mobile */
+      }
+      .page-wrapper {
+        max-width: 100%;
+        margin: 0;
+        padding: 1rem;       /* simple page margin */
+      }
+      .card {
+        max-width: 100%;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 1.5rem 0 2rem;  /* let content run edge-to-edge inside wrapper */
+        background: transparent;
+      }
+    }
+    /* ============================ */
+
+    h1 {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 1.9rem;
+      margin: 0 0 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      text-align: center;
+      color: var(--ts-accent);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--ts-muted);
+      max-width: 38rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .note {
+      font-size: 0.85rem;
+      color: var(--ts-muted);
+      margin-top: 0.35rem;
+    }
+
+    .sections-intro {
+      margin-bottom: 1.75rem;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    h2 {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ts-accent);
+      margin: 1.25rem 0 0.75rem;
+    }
+
+    .section {
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      padding: 1rem 1rem 1.1rem;
+      margin-bottom: 1.2rem;
+      background: #fdfbf7;
+    }
+
+    .section.outputs {
+      background: var(--ts-accent-soft);
+      border-color: #c5d5c9;
+    }
+
+    label {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      font-size: 0.92rem;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 0.45rem 0.5rem;
+      margin-top: 0.25rem;
+      border-radius: 6px;
+      border: 1px solid #d4cbbd;
+      background: #fff;
+      font: inherit;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--ts-accent);
+      box-shadow: 0 0 0 1px rgba(20, 61, 47, 0.2);
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+
+    .row > div {
+      flex: 1 1 220px;
+    }
+
+    .outputs p {
+      margin: 0.25rem 0;
+      font-size: 0.94rem;
+    }
+
+    .outputs strong {
+      font-weight: 600;
+    }
+
+    button {
+      margin-top: 0.9rem;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid var(--ts-button);
+      background: var(--ts-button);
+      color: var(--ts-button-text);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      background: #1b4f3c;
+      border-color: #1b4f3c;
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      color: var(--ts-muted);
+    }
+
+    .footer-note a {
+      color: var(--ts-accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(20,61,47,0.2);
+      padding-bottom: 1px;
+    }
+
+    .footer-note a:hover {
+      border-bottom-color: var(--ts-accent);
+    }
+
+    /* ===== HERB TABLE ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 0.6rem;
+      border: 1px solid var(--ts-border);
+      border-radius: 8px;
+    }
+
+    table.herb-table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    .herb-table th,
+    .herb-table td {
+      padding: 0.45rem 0.55rem;
+      border-bottom: 1px solid var(--ts-border);
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .herb-table thead th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ts-muted);
+      background: #fdfbf7;
+      border-bottom: 1px solid var(--ts-border);
+    }
+
+    .herb-table th:nth-child(1), .herb-table td:nth-child(1) { width: 32%; }
+    .herb-table th:nth-child(2), .herb-table td:nth-child(2) { width: 10%; }
+    .herb-table th:nth-child(3), .herb-table td:nth-child(3) { width: 17%; }
+    .herb-table th:nth-child(4), .herb-table td:nth-child(4) { width: 17%; }
+    .herb-table th:nth-child(5), .herb-table td:nth-child(5) { width: 24%; }
+
+    .herb-table input[type="text"],
+    .herb-table input[type="number"] {
+      margin-top: 0;
+      padding: 0.35rem 0.4rem;
+      font-size: 0.86rem;
+    }
+
+    .herb-table td.output {
+      font-weight: 600;
+      color: var(--ts-accent);
+      white-space: nowrap;
+    }
+
+    .herb-table tfoot td {
+      font-weight: 600;
+      border-top: 2px solid var(--ts-border);
+      border-bottom: none;
+      background: var(--ts-accent-soft);
+    }
+    /* ======================= */
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="site-tag">
+        <a href="https://www.terrasylvaschool.com" target="_blank" rel="noopener">
+          <img src="https://terrasylvaschool.github.io/percolation-calc/terrasylvalogo.jpg" alt="Terra Sylva School" class="ts-logo">
+        </a>
+      </div>
+      <h1>Tincture Formulation Calculator</h1>
+      <p class="subtitle">
+        Play with the proportions of up to eight herbs in a formula and see how much of each is delivered at a given dose. Also learn exactly how much of each herb goes in the bottle to make your formula.
+      </p>
+
+      <p class="sections-intro">
+        Set the dose in mL below, then list your herbs and how many proportional "parts" each takes up in the formula. The calculator converts each herb's share of the blend into drops and mL per dose, and — if you fill in bottle size and frequency — how long a bottle will last.
+      <br><br>
+      Once you're happy with the formula, the last column tells you how many mL of each herb to add to your bottle.
+      </p>
+
+      <div class="section">
+        <h2>Dosing Parameters</h2>
+        <div class="row">
+          <div>
+            <label>
+              Dose per administration (mL) <span class="note">required</span>
+              <input type="number" id="doseML" step="0.01" min="0">
+            </label>
+            <span class="note">A dropperful is *roughly* 1 mL</span>
+          </div>
+          <div>
+            <label>
+              Drops per mL
+              <input type="number" id="dropsPerML" step="0.1" min="0" value="30">
+            </label>
+            <span class="note">Defaults to 30</span>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>
+              Doses per day <span class="note">optional</span>
+              <input type="number" id="dosesPerDay" step="0.1" min="0">
+            </label>
+          </div>
+          <div>
+            <label>
+              Dispensing bottle size (oz) <span class="note">optional</span>
+              <input type="number" id="bottleSize" step="0.1" min="0">
+            </label>
+          </div>
+        </div>
+        <p class="note">1 oz = 30 mL for the purposes of this calculator.</p>
+        <button id="clearButton" type="button">Clear All Inputs</button>
+      </div>
+
+      <div class="section">
+        <h2>Herb Formula</h2>
+        <p class="note">
+          Herb name is for your reference only — the calculator doesn't use it. Enter each herb's number of "parts" in the blend.
+        </p>
+        <div class="table-wrapper">
+          <table class="herb-table">
+            <thead>
+              <tr>
+                <th>Herb</th>
+                <th>Parts</th>
+                <th>Drops / dose</th>
+                <th>mL / dose</th>
+                <th>mL to fill</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text" id="herbName1" placeholder="Herb 1"></td>
+                <td><input type="number" id="herbParts1" step="0.1" min="0"></td>
+                <td class="output" id="dpd1">—</td>
+                <td class="output" id="dpm1">—</td>
+                <td class="output" id="bml1">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName2" placeholder="Herb 2"></td>
+                <td><input type="number" id="herbParts2" step="0.1" min="0"></td>
+                <td class="output" id="dpd2">—</td>
+                <td class="output" id="dpm2">—</td>
+                <td class="output" id="bml2">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName3" placeholder="Herb 3"></td>
+                <td><input type="number" id="herbParts3" step="0.1" min="0"></td>
+                <td class="output" id="dpd3">—</td>
+                <td class="output" id="dpm3">—</td>
+                <td class="output" id="bml3">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName4" placeholder="Herb 4"></td>
+                <td><input type="number" id="herbParts4" step="0.1" min="0"></td>
+                <td class="output" id="dpd4">—</td>
+                <td class="output" id="dpm4">—</td>
+                <td class="output" id="bml4">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName5" placeholder="Herb 5"></td>
+                <td><input type="number" id="herbParts5" step="0.1" min="0"></td>
+                <td class="output" id="dpd5">—</td>
+                <td class="output" id="dpm5">—</td>
+                <td class="output" id="bml5">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName6" placeholder="Herb 6"></td>
+                <td><input type="number" id="herbParts6" step="0.1" min="0"></td>
+                <td class="output" id="dpd6">—</td>
+                <td class="output" id="dpm6">—</td>
+                <td class="output" id="bml6">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName7" placeholder="Herb 7"></td>
+                <td><input type="number" id="herbParts7" step="0.1" min="0"></td>
+                <td class="output" id="dpd7">—</td>
+                <td class="output" id="dpm7">—</td>
+                <td class="output" id="bml7">—</td>
+              </tr>
+              <tr>
+                <td><input type="text" id="herbName8" placeholder="Herb 8"></td>
+                <td><input type="number" id="herbParts8" step="0.1" min="0"></td>
+                <td class="output" id="dpd8">—</td>
+                <td class="output" id="dpm8">—</td>
+                <td class="output" id="bml8">—</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Totals</td>
+                <td id="totalParts">—</td>
+                <td id="totalDPD">—</td>
+                <td id="totalDPM">—</td>
+                <td id="totalBML">—</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      <div class="section outputs">
+        <h2>Bottle &amp; Supply</h2>
+        <p><strong>Doses per bottle</strong> (Bottle size × 30 ÷ Dose): <span id="dosesPerBottle">—</span></p>
+        <p><strong>Bottle will last</strong> (Doses per bottle ÷ Doses per day): <span id="daysLasting">—</span> days</p>
+        <p class="note">Fill in bottle size and doses per day above to see these.</p>
+      </div>
+
+      <div class="footer-note">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getNumber(id) {
+      var value = document.getElementById(id).value;
+      var n = parseFloat(value);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function getNumberWithDefault(id, defaultValue) {
+      var raw = document.getElementById(id).value;
+      if (raw === "" || raw === null) return defaultValue;
+      var n = parseFloat(raw);
+      return isNaN(n) ? defaultValue : n;
+    }
+
+    function formatNumber(n, decimals) {
+      if (n === null || isNaN(n)) return "—";
+      return n.toFixed(decimals);
+    }
+
+    function updateCalculations() {
+      var dt = getNumber("doseML");
+      var doseValid = dt > 0;
+      var dm = getNumberWithDefault("dropsPerML", 30);
+      var bottleOz = getNumber("bottleSize");
+      var dosesPerDay = getNumber("dosesPerDay");
+
+      // Gather parts for all 8 herbs
+      var parts = [];
+      var totalParts = 0;
+      for (var i = 1; i <= 8; i++) {
+        var p = getNumber("herbParts" + i);
+        parts.push(p);
+        totalParts += p;
+      }
+      var partsValid = totalParts > 0;
+      var bottleML = bottleOz > 0 ? bottleOz * 30 : 0;
+      var bottleValid = bottleML > 0;
+
+      var totalDPD = 0;
+      var totalDPM = 0;
+      var totalBML = 0;
+
+      for (var i = 1; i <= 8; i++) {
+        var dpdEl = document.getElementById("dpd" + i);
+        var dpmEl = document.getElementById("dpm" + i);
+        var bmlEl = document.getElementById("bml" + i);
+        var fraction = partsValid ? (parts[i - 1] / totalParts) : 0;
+
+        if (doseValid && partsValid) {
+          var dpm = dt * fraction;          // mL per dose of this herb
+          var dpd = dpm * dm;                // drops per dose of this herb
+          totalDPD += dpd;
+          totalDPM += dpm;
+          dpdEl.textContent = formatNumber(dpd, 1);
+          dpmEl.textContent = formatNumber(dpm, 2);
+        } else {
+          dpdEl.textContent = "—";
+          dpmEl.textContent = "—";
+        }
+
+        if (partsValid && bottleValid) {
+          var bml = bottleML * fraction;     // mL of this herb to fill the whole bottle
+          totalBML += bml;
+          bmlEl.textContent = formatNumber(bml, 2);
+        } else {
+          bmlEl.textContent = "—";
+        }
+      }
+
+      document.getElementById("totalParts").textContent = partsValid ? formatNumber(totalParts, 2) : "—";
+      document.getElementById("totalDPD").textContent = (doseValid && partsValid) ? formatNumber(totalDPD, 1) : "—";
+      document.getElementById("totalDPM").textContent = (doseValid && partsValid) ? formatNumber(totalDPM, 2) : "—";
+      document.getElementById("totalBML").textContent = (partsValid && bottleValid) ? formatNumber(totalBML, 2) : "—";
+
+      // Secondary outputs
+      var dosesPerBottle = (bottleML > 0 && doseValid) ? (bottleML / dt) : null;
+      document.getElementById("dosesPerBottle").textContent = dosesPerBottle !== null ? formatNumber(dosesPerBottle, 1) : "—";
+
+      var daysLasting = (dosesPerBottle !== null && dosesPerDay > 0) ? (dosesPerBottle / dosesPerDay) : null;
+      document.getElementById("daysLasting").textContent = daysLasting !== null ? formatNumber(daysLasting, 1) : "—";
+    }
+
+    // Update on any input change
+    var inputs = document.querySelectorAll("input");
+    inputs.forEach(function (input) {
+      input.addEventListener("input", updateCalculations);
+    });
+
+    // Clear button
+    document.getElementById("clearButton").addEventListener("click", function () {
+      inputs.forEach(function (input) {
+        if (input.type === "number" || input.type === "text") {
+          input.value = "";
+        }
+      });
+      // Restore DM's default
+      document.getElementById("dropsPerML").value = "30";
+      updateCalculations();
+    });
+
+    // Run once at load
+    updateCalculations();
+  </script>
+
+</body>
+</html>
