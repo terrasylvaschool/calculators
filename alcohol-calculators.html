@@ -276,6 +276,7 @@
         <p class="warning" id="c1_warn" style="display:none;"></p>
         <button type="button" data-clear="calc1">Clear</button>
         <p class="example">example: I have 95% alcohol on hand, and I need 20 ounces of 65% alcohol for the tincture I'm making.</p>
+        <p class="example">formula: Units of alcohol = target % × target units ÷ starting %<br>The rest is water.</p>
       </div>
 
       <!-- 2. FORTIFY -->
@@ -297,6 +298,7 @@
         <p class="warning" id="c2_warn" style="display:none;"></p>
         <button type="button" data-clear="calc2">Clear</button>
         <p class="example">example: I'm making a mushroom double-extract. I have 22 ounces of reduced decoction (0% alcohol), and I need to raise it to 25% alcohol for preservation, using my tincture of the same mushroom, which is 80% alcohol.</p>
+        <p class="example">formula: Units to add = units on hand × (target % − current %) ÷ (added % − target %)</p>
       </div>
 
       <!-- 3. COMBINE -->
@@ -320,10 +322,11 @@
         <p class="warning" id="c3_warn" style="display:none;"></p>
         <button type="button" data-clear="calc3">Clear</button>
         <p class="example">example: I have 6 ounces of Reishi double-extract, which is 25% alcohol. If I add two ounces of Milky Oats tincture to it (50% alcohol), what alcohol % will the combination be?</p>
+        <p class="example">formula: Resulting % = (units of first × first % + units of second × second %) ÷ total units</p>
       </div>
 
       <p class="footer-note">
-        Percentages are by volume (ABV). Volumes are treated as additive; real alcohol–water mixtures contract slightly when combined, so expect the final volume to come in a few percent under the calculated figure.
+        Percentages are by volume (ABV). Volumes are treated as simply additive here; real alcohol–water mixtures contract slightly when combined, so expect the final volume to come in slightly under the calculated figure.
       </p>
     </div>
   </div>
