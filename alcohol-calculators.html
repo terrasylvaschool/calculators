@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alcohol Calculators · Terra Sylva School</title>
+  <style>
+    :root {
+      --ts-bg: #6b6257;
+      --ts-card-bg: #ffffff;
+      --ts-border: #e2d8c8;
+      --ts-text: #2b2b2b;
+      --ts-muted: #6b6257;
+      --ts-accent: #143d2f;
+      --ts-accent-soft: #e6efe9;
+      --ts-button: #143d2f;
+      --ts-button-text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--ts-bg);
+      color: var(--ts-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.6;
+    }
+
+    .page-wrapper {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .site-tag {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ts-muted);
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+
+    .site-tag a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      padding-bottom: 1px;
+    }
+
+    .site-tag a:hover {
+      border-bottom-color: var(--ts-accent);
+    }
+
+    .card {
+      background: var(--ts-card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--ts-border);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      padding: 2rem 1.75rem 2.25rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .ts-logo {
+      max-width: 275px;
+      height: auto;
+      display: block;
+      margin: 0.5rem auto 1rem;
+      opacity: 0.95;
+    }
+
+    @media (min-width: 700px) {
+      .card {
+        padding: 2.5rem 2.75rem 2.75rem;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        background: #ffffff;
+      }
+      .page-wrapper {
+        max-width: 100%;
+        margin: 0;
+        padding: 1rem;
+      }
+      .card {
+        max-width: 100%;
+        margin: 0;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 1.5rem 0 2rem;
+        background: transparent;
+      }
+    }
+
+    h1 {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 1.9rem;
+      margin: 0 0 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      text-align: center;
+      color: var(--ts-accent);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--ts-muted);
+      max-width: 38rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .note {
+      font-size: 0.85rem;
+      color: var(--ts-muted);
+      margin-top: 0.35rem;
+    }
+
+    .sections-intro {
+      margin-bottom: 1.75rem;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    h2 {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ts-accent);
+      margin: 0 0 0.75rem;
+    }
+
+    .section {
+      border: 1px solid var(--ts-border);
+      border-radius: 10px;
+      padding: 1rem 1rem 1.1rem;
+      margin-bottom: 1.2rem;
+      background: #fdfbf7;
+    }
+
+    /* Sentence layout: inline fields sit inside running text */
+    .sentence {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 2.7;
+    }
+
+    .sentence + .sentence {
+      margin-top: 0.25rem;
+    }
+
+    input[type="number"] {
+      display: inline-block;
+      width: 5.6rem;
+      padding: 0.3rem 0.4rem;
+      margin: 0 0.15rem;
+      border-radius: 6px;
+      border: 1px solid #d4cbbd;
+      background: #fff;
+      font: inherit;
+      text-align: center;
+      vertical-align: baseline;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--ts-accent);
+      box-shadow: 0 0 0 1px rgba(20, 61, 47, 0.2);
+    }
+
+    .out {
+      display: inline-block;
+      min-width: 5.6rem;
+      padding: 0.3rem 0.5rem;
+      margin: 0 0.15rem;
+      border-radius: 6px;
+      border: 1px solid #c5d5c9;
+      background: var(--ts-accent-soft);
+      color: var(--ts-accent);
+      font-weight: 600;
+      text-align: center;
+      vertical-align: baseline;
+    }
+
+    .warning {
+      margin: 0.6rem 0 0;
+      color: #8a3b2e;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    button {
+      margin-top: 0.9rem;
+      padding: 0.45rem 0.9rem;
+      cursor: pointer;
+      border-radius: 999px;
+      border: 1px solid var(--ts-button);
+      background: var(--ts-button);
+      color: var(--ts-button-text);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      background: #1b4f3c;
+      border-color: #1b4f3c;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--ts-accent);
+      outline-offset: 2px;
+    }
+
+    .example {
+      margin: 0.9rem 0 0;
+      font-size: 0.85rem;
+      color: var(--ts-muted);
+    }
+
+    .footer-note {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      color: var(--ts-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <div class="card">
+      <div class="site-tag">
+        <a href="https://www.terrasylvaschool.com" target="_blank" rel="noopener">
+          <img src="https://terrasylvaschool.github.io/percolation-calc/terrasylvalogo.jpg" alt="Terra Sylva School" class="ts-logo">
+        </a>
+      </div>
+
+      <h1>Alcohol Calculators</h1>
+      <p class="subtitle">
+        Three tools for working out dilutions, fortifications, and blends of alcoholic menstruums.
+      </p>
+
+      <p class="sections-intro">
+        Fill in the blanks in any sentence. The shaded field fills in as soon as the other values are entered.
+      </p>
+      <p class="note">
+        Use consistent units for volume across a sentence. Whatever unit you enter (mL, ounces, cups) is the unit of the result.
+      </p>
+
+      <!-- 1. DILUTE -->
+      <div class="section" id="calc1" style="margin-top:1.5rem;">
+        <h2>Dilute with water</h2>
+        <p class="sentence">
+          I have
+          <input type="number" id="c1_startPct" step="any" min="0" max="100" aria-label="Starting alcohol percent">
+          % alcohol, and I want to dilute it with water down to
+          <input type="number" id="c1_targetVol" step="any" min="0" aria-label="Target units">
+          units of
+          <input type="number" id="c1_targetPct" step="any" min="0" max="100" aria-label="Target alcohol percent">
+          % alcohol. I need to combine
+          <span class="out" id="c1_out" aria-live="polite">—</span>
+          units of the alcohol with
+          <span class="out" id="c1_outWater" aria-live="polite">—</span>
+          units of water.
+        </p>
+        <p class="warning" id="c1_warn" style="display:none;"></p>
+        <button type="button" data-clear="calc1">Clear</button>
+        <p class="example">example: I have 95% alcohol on hand, and I need 20 ounces of 65% alcohol for the tincture I'm making.</p>
+      </div>
+
+      <!-- 2. FORTIFY -->
+      <div class="section" id="calc2">
+        <h2>Raise the proof</h2>
+        <p class="sentence">
+          I have
+          <input type="number" id="c2_vol" step="any" min="0" aria-label="Units of alcohol on hand">
+          units of
+          <input type="number" id="c2_startPct" step="any" min="0" max="100" aria-label="Starting alcohol percent">
+          % alcohol, and I want to raise it to
+          <input type="number" id="c2_targetPct" step="any" min="0" max="100" aria-label="Target alcohol percent">
+          % alcohol. The alcohol I am adding is
+          <input type="number" id="c2_addPct" step="any" min="0" max="100" aria-label="Percent of the alcohol being added">
+          %. I need to add
+          <span class="out" id="c2_out" aria-live="polite">—</span>
+          units of my stronger alcoholic solution.
+        </p>
+        <p class="warning" id="c2_warn" style="display:none;"></p>
+        <button type="button" data-clear="calc2">Clear</button>
+        <p class="example">example: I'm making a mushroom double-extract. I have 22 ounces of reduced decoction (0% alcohol), and I need to raise it to 25% alcohol for preservation, using my tincture of the same mushroom, which is 80% alcohol.</p>
+      </div>
+
+      <!-- 3. COMBINE -->
+      <div class="section" id="calc3">
+        <h2>Combine two solutions</h2>
+        <p class="sentence">
+          I have
+          <input type="number" id="c3_vol1" step="any" min="0" aria-label="Units of first alcohol">
+          units of
+          <input type="number" id="c3_pct1" step="any" min="0" max="100" aria-label="First alcohol percent">
+          % alcohol, and
+          <input type="number" id="c3_vol2" step="any" min="0" aria-label="Units of second alcohol">
+          units of
+          <input type="number" id="c3_pct2" step="any" min="0" max="100" aria-label="Second alcohol percent">
+          % alcohol. If I combine the two, I will have
+          <span class="out" id="c3_outVol" aria-live="polite">—</span>
+          units of
+          <span class="out" id="c3_outPct" aria-live="polite">—</span>
+          % alcohol.
+        </p>
+        <p class="warning" id="c3_warn" style="display:none;"></p>
+        <button type="button" data-clear="calc3">Clear</button>
+        <p class="example">example: I have 6 ounces of Reishi double-extract, which is 25% alcohol. If I add two ounces of Milky Oats tincture to it (50% alcohol), what alcohol % will the combination be?</p>
+      </div>
+
+      <p class="footer-note">
+        Percentages are by volume (ABV). Volumes are treated as additive; real alcohol–water mixtures contract slightly when combined, so expect the final volume to come in a few percent under the calculated figure.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    var DASH = "—";
+
+    // Returns null for empty/invalid fields so a legitimate 0 (e.g. plain water) is still accepted.
+    function val(id) {
+      var raw = document.getElementById(id).value;
+      if (raw === "") return null;
+      var n = parseFloat(raw);
+      return isNaN(n) ? null : n;
+    }
+
+    function fmt(n) {
+      return (Math.round(n * 100) / 100).toFixed(2);
+    }
+
+    function setText(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function setWarning(id, msg) {
+      var el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = msg ? "block" : "none";
+    }
+
+    function anyNull() {
+      for (var i = 0; i < arguments.length; i++) {
+        if (arguments[i] === null) return true;
+      }
+      return false;
+    }
+
+    function pctOutOfRange() {
+      for (var i = 0; i < arguments.length; i++) {
+        if (arguments[i] !== null && (arguments[i] < 0 || arguments[i] > 100)) return true;
+      }
+      return false;
+    }
+
+    /* 1. Dilution: how much of the initial alcohol to start with */
+    function calc1() {
+      var startPct = val("c1_startPct");
+      var targetVol = val("c1_targetVol");
+      var targetPct = val("c1_targetPct");
+      var warn = "";
+      var out = DASH;
+      var outWater = DASH;
+
+      if (!anyNull(startPct, targetVol, targetPct)) {
+        if (pctOutOfRange(startPct, targetPct)) {
+          warn = "Alcohol percentages must be between 0 and 100.";
+        } else if (startPct <= 0) {
+          warn = "Starting alcohol % must be greater than 0.";
+        } else if (targetVol < 0) {
+          warn = "Target units cannot be negative.";
+        } else if (targetPct > startPct) {
+          warn = "Target alcohol % cannot be higher than starting alcohol % when diluting with water.";
+        } else {
+          var alcoholNeeded = (targetPct * targetVol) / startPct;
+          out = fmt(alcoholNeeded);
+          outWater = fmt(targetVol - alcoholNeeded);
+        }
+      }
+
+      setText("c1_out", out);
+      setText("c1_outWater", outWater);
+      setWarning("c1_warn", warn);
+    }
+
+    /* 2. Fortification: how much stronger alcohol to add */
+    function calc2() {
+      var vol = val("c2_vol");
+      var startPct = val("c2_startPct");
+      var targetPct = val("c2_targetPct");
+      var addPct = val("c2_addPct");
+      var warn = "";
+      var out = DASH;
+
+      if (!anyNull(vol, startPct, targetPct, addPct)) {
+        if (pctOutOfRange(startPct, targetPct, addPct)) {
+          warn = "Alcohol percentages must be between 0 and 100.";
+        } else if (vol < 0) {
+          warn = "Units on hand cannot be negative.";
+        } else if (targetPct <= startPct) {
+          warn = "Target alcohol % must be higher than your current alcohol % to raise it.";
+        } else if (addPct <= targetPct) {
+          warn = "The alcohol you are adding must be stronger than your target %.";
+        } else {
+          out = fmt((vol * (targetPct - startPct)) / (addPct - targetPct));
+        }
+      }
+
+      setText("c2_out", out);
+      setWarning("c2_warn", warn);
+    }
+
+    /* 3. Combination: resulting volume and strength */
+    function calc3() {
+      var vol1 = val("c3_vol1");
+      var pct1 = val("c3_pct1");
+      var vol2 = val("c3_vol2");
+      var pct2 = val("c3_pct2");
+      var warn = "";
+      var outVol = DASH;
+      var outPct = DASH;
+
+      if (!anyNull(vol1, pct1, vol2, pct2)) {
+        if (pctOutOfRange(pct1, pct2)) {
+          warn = "Alcohol percentages must be between 0 and 100.";
+        } else if (vol1 < 0 || vol2 < 0) {
+          warn = "Units cannot be negative.";
+        } else if (vol1 + vol2 === 0) {
+          warn = "Enter a volume greater than 0 for at least one solution.";
+        } else {
+          var total = vol1 + vol2;
+          outVol = fmt(total);
+          outPct = fmt((vol1 * pct1 + vol2 * pct2) / total);
+        }
+      }
+
+      setText("c3_outVol", outVol);
+      setText("c3_outPct", outPct);
+      setWarning("c3_warn", warn);
+    }
+
+    var handlers = { calc1: calc1, calc2: calc2, calc3: calc3 };
+
+    document.querySelectorAll(".section").forEach(function (section) {
+      var run = handlers[section.id];
+      section.querySelectorAll("input").forEach(function (input) {
+        input.addEventListener("input", run);
+      });
+    });
+
+    document.querySelectorAll("button[data-clear]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var section = document.getElementById(btn.getAttribute("data-clear"));
+        section.querySelectorAll("input").forEach(function (input) {
+          input.value = "";
+        });
+        handlers[section.id]();
+      });
+    });
+
+    calc1();
+    calc2();
+    calc3();
+  </script>
+
+</body>
+</html>
